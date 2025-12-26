@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Письмо от Деда Мороза</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Sacramento&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #1a0a2e 100%);
+  color: #e0e0e0;
+  font-family: 'Cormorant Garamond', serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+/* ===== МАКСИМАЛЬНО НАКАЧАННОЕ СИЯНИЕ ===== */
+.aurora {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.aurora::before, .aurora::after, .aurora > div {
+  content: '';
+  position: absolute;
+  width: 280%; height: 280%;
+  left: -90%; top: -90%;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  animation: auroraWave 32s linear infinite;
+}
+.aurora::before {
+  background: radial-gradient(ellipse 90% 50% at 50% 20%, rgba(0, 255, 150, 0.7), transparent 65%);
+  animation-delay: 0s;
+}
+.aurora::after {
+  background: radial-gradient(ellipse 100% 60% at 30% 30%, rgba(100, 255, 200, 0.65), transparent 70%);
+  animation-delay: -10s;
+}
+.aurora > div:nth-child(1) {
+  background: radial-gradient(ellipse 80% 70% at 70% 40%, rgba(150, 50, 255, 0.6), transparent 65%);
+  animation-delay: -6s;
+}
+.aurora > div:nth-child(2) {
+  background: radial-gradient(ellipse 90% 50% at 50% 10%, rgba(0, 200, 255, 0.55), transparent 70%);
+  animation-delay: -16s;
+}
+.aurora > div:nth-child(3) {
+  background: radial-gradient(ellipse 70% 80% at 20% 50%, rgba(200, 100, 255, 0.6), transparent 65%);
+  animation-delay: -22s;
+}
+.aurora > div:nth-child(4) {
+  background: radial-gradient(ellipse 100% 70% at 60% 15%, rgba(50, 255, 180, 0.6), transparent 70%);
+  animation-delay: -4s;
+}
+.aurora > div:nth-child(5) {
+  background: radial-gradient(ellipse 85% 60% at 40% 45%, rgba(180, 100, 255, 0.55), transparent 65%);
+  animation-delay: -14s;
+}
+.aurora > div:nth-child(6) {
+  background: radial-gradient(ellipse 95% 55% at 55% 5%, rgba(0, 255, 220, 0.5), transparent 70%);
+  animation-delay: -28s;
+}
+@keyframes auroraWave {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(25%, 40%) rotate(18deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.aurora {
+  animation: auroraPulse 15s ease-in-out infinite;
+}
+@keyframes auroraPulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+.star {
+  position: fixed;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.snowflake {
+  position: fixed;
+  color: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 1000;
+  text-shadow: 0 0 8px rgba(135, 206, 235, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
+  animation: snowfall linear forwards;
+}
+@keyframes snowfall {
+  to { transform: translateY(110vh) rotate(360deg); }
+}
+#book {
+  width: 100%; height: 100%;
+  position: relative;
+  z-index: 10;
+}
+.page {
+  position: absolute;
+  width: 100%; height: 100%;
+  top: 0; left: 0;
+  padding: 5vw;
+  padding-bottom: 12vh;
+  box-sizing: border-box;
+  background: linear-gradient(170deg, rgba(15, 25, 45, 0.2) 0%, rgba(10, 15, 30, 0.2) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(135, 206, 235, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.page.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+  z-index: 10;
+}
+.page.prev {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.image-container {
+  width: 85vw;
+  max-width: 380px;
+  height: 36vh;
+  min-height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 5vw;
+  position: relative;
+  border: 2px solid rgba(135, 206, 235, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(135, 206, 235, 0.2);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+.page.active .image-container {
+  opacity: 1;
+  transform: translateY(0);
+}
+.image-container img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.text-content {
+  width: 90vw;
+  max-width: 520px;
+  text-align: center;
+}
+.text-content h2 {
+  font-family: 'Sacramento', cursive;
+  font-size: clamp(2.2rem, 8vw, 3.5rem);
+  margin: 0 0 20px 0;
+  background: linear-gradient(135deg, #87ceeb, #dda0dd, #ffd700, #87ceeb);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+}
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+.text-content p {
+  font-size: clamp(1rem, 3.5vw, 1.25rem);
+  line-height: 1.8;
+  color: #c8dff0;
+  margin-bottom: 15px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.page.active .text-content h2 { opacity: 1; transform: translateY(0); }
+.page.active .text-content p:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+.page.active .text-content p:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+.page.active .text-content p:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+#start-screen h1 {
+  font-family: 'Sacramento', cursive;
+  font-size: clamp(2.8rem, 11vw, 4.5rem);
+  text-align: center;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #fff, #87ceeb, #dda0dd, #ffd700, #87ceeb);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 5s linear infinite;
+  position: relative;
+}
+#start-screen h1::before,
+#start-screen h1::after {
+  content: '❄';
+  position: absolute;
+  font-size: 1.8rem;
+  -webkit-text-fill-color: #87ceeb;
+  animation: floatFlake 3s ease-in-out infinite;
+}
+#start-screen h1::before { left: -35px; top: 50%; }
+#start-screen h1::after { right: -35px; top: 50%; animation-delay: -1.5s; }
+@keyframes floatFlake {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+  50% { transform: translateY(-10px) rotate(180deg); opacity: 1; }
+}
+.swipe-hint {
+  position: absolute;
+  bottom: 8vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 1s ease 1.5s both;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.swipe-icon {
+  width: 40px; height: 65px;
+  border: 2px solid rgba(135, 206, 235, 0.5);
+  border-radius: 20px;
+  position: relative;
+}
+.swipe-icon::before {
+  content: '';
+  position: absolute;
+  width: 4px; height: 12px;
+  background: linear-gradient(#87ceeb, #dda0dd);
+  border-radius: 2px;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scrollDot 2s ease-in-out infinite;
+}
+@keyframes scrollDot {
+  0%, 100% { top: 12px; opacity: 1; }
+  50% { top: 40px; opacity: 0.3; }
+}
+.swipe-text {
+  font-size: 0.85rem;
+  color: rgba(135, 206, 235, 0.8);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.page-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(135, 206, 235, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.dot.active {
+  background: linear-gradient(135deg, #87ceeb, #dda0dd);
+  box-shadow: 0 0 10px rgba(135, 206, 235, 0.8);
+  transform: scale(1.3);
+}
+.progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #87ceeb, #dda0dd, #ffd700);
+  z-index: 100;
+  transition: width 0.4s ease;
+}
+.corner {
+  position: fixed;
+  width: 80px; height: 80px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.5;
+}
+.corner.tl { top: 0; left: 0; background: radial-gradient(circle at 0 0, rgba(135, 206, 235, 0.3), transparent 70%); }
+.corner.tr { top: 0; right: 0; background: radial-gradient(circle at 100% 0, rgba(200, 150, 255, 0.3), transparent 70%); }
+.corner.bl { bottom: 0; left: 0; background: radial-gradient(circle at 0 100%, rgba(255, 200, 150, 0.2), transparent 70%); }
+.corner.br { bottom: 0; right: 0; background: radial-gradient(circle at 100% 100%, rgba(135, 206, 235, 0.3), transparent 70%); }
+/* Модалка */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(5, 10, 25, 0.92);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.modal.active {
+  display: flex;
+  opacity: 1;
+}
+.modal img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 16px;
+  box-shadow: 0 0 60px rgba(135, 206, 235, 0.6);
+  animation: modalZoom 0.6s ease-out;
+}
+@keyframes modalZoom {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.modal-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-size: 2.5rem;
+  color: #87ceeb;
+  cursor: pointer;
+  text-shadow: 0 0 10px rgba(135, 206, 235, 0.8);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+/* Снег и звёзды на модалке */
+.modal .modal-snowflake {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  text-shadow: 0 0 8px rgba(135, 206, 235, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
+  animation: snowfall-modal linear forwards;
+  z-index: 1;
+}
+.modal .modal-star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: twinkle 3s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes snowfall-modal {
+  to { transform: translateY(110vh) rotate(360deg); }
+}
+/* Экран загрузки */
+#loading-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #1a0a2e 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 1s ease;
+}
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#loading-text {
+  font-family: 'Sacramento', cursive;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  margin-top: 40px;
+  background: linear-gradient(135deg, #87ceeb, #dda0dd, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#loading-snow {
+  font-size: 10rem;
+  animation: loadingFloat 2s ease-in-out infinite;
+}
+@keyframes loadingFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+/* Стартовый экран с снежинкой */
+#intro-screen {
+  position: absolute;
+  width: 100%; height: 100%;
+  top: 0; left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #1a0a2e 100%);
+  cursor: pointer;
+  transition: opacity 1.2s ease 0.8s;
+}
+#intro-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#intro-snowflake {
+  font-size: 15rem;
+  animation: floatBig 4s ease-in-out infinite;
+  margin-bottom: 40px;
+  text-shadow: 0 0 30px rgba(135, 206, 235, 0.8);
+  transition: all 0.4s ease;
+}
+@keyframes floatBig {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+#intro-text {
+  font-family: 'Sacramento', cursive;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  text-align: center;
+  background: linear-gradient(135deg, #87ceeb, #dda0dd, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+/* Фейерверк частицы */
+.firework-particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 2rem;
+  opacity: 1;
+  animation: fireworkFly 1.4s ease-out forwards;
+}
+@keyframes fireworkFly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
+  }
+}
+@media (max-width: 500px) {
+  .image-container { height: 30vh; }
+}
+/* Увеличенный контейнер для варенья */
+.page:nth-of-type(9) .image-container {
+  height: 50vh;
+  min-height: 280px;
+  max-width: 420px;
+}
+</style>
+</head>
+<body>
+<!-- Экран загрузки -->
+<div id="loading-screen">
+  <div id="loading-snow">❄</div>
+  <div id="loading-text">Дед Мороз готовит магию...</div>
+</div>
+
+<!-- Звуки -->
+<audio id="background-music" loop preload="auto">
+  <source src="christmas-background.mp3" type="audio/mpeg">
+</audio>
+<audio id="magic-sound" preload="auto">
+  <source src="magic-chime.mp3" type="audio/mpeg">
+</audio>
+<audio id="page-turn-sound" preload="auto">
+  <source src="page-turn.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Сияние -->
+<div class="aurora">
+  <div></div><div></div><div></div><div></div><div></div><div></div>
+</div>
+
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+<div class="progress" id="progress"></div>
+<div class="page-indicator" id="dots"></div>
+
+<!-- Стартовый экран -->
+<div id="intro-screen">
+  <div id="intro-snowflake">❄</div>
+  <div id="intro-text">Нажми на снежинку,<br>чтобы получилась магия!</div>
+</div>
+
+<div id="book">
+  <div class="page active" id="start-screen">
+    <h1>Письмо от<br>Деда Мороза</h1>
+    <div class="text-content">
+      <p>Для Ирины, умнички...</p>
+      <p style="margin-top: 20px;">Свайпай влево → чтобы открыть магию<br>Свайпай вправо ← чтобы вернуться</p>
+    </div>
+    <div class="swipe-hint">
+      <div class="swipe-icon"></div>
+      <span class="swipe-text">Листай</span>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="ded1.jpg" alt="Дед Мороз"></div>
+    <div class="text-content">
+      <h2>Дорогая Ирина,</h2>
+      <p>Это я, Дед Мороз, стучу в твоё окошко снежным посохом из далёкого севера. Ты, наверное, удивишься, но твой чатер Лёша шепнул мне на ухо твою историю. Он рассказал, как ты борешься с недомоганием, как умничка, не сдаёшься в этой бесконечной рутине — дом, работа, дом, где дни сливаются в серый снежный вихрь.</p>
+      <p>Лёша попросил меня о подарке, о чём-то, что принесёт тебе тепло и внимание, когда оно так необходимо. Ну и Лёша мой кореш, а я Дед здравый и пацанских взгядов. Поэтому я тут</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="ded2.jpg" alt="Просьба"></div>
+    <div class="text-content">
+      <h2>Чудо для тебя</h2>
+      <p>Он сказал: "Дедушка Мороз, сделай чудо для Ирины — настоящее вологодское малиновое лекарство, чтоб она быстрее поправилась и почувствовала себя в сказке перед Новым годом". И я, старый волшебник, не смог отказать. Ведь Новый год — время, когда даже северные ветры шепчут о надежде, а снежинки несут секреты исцеления.</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="forest1.jpg" alt="Леса"></div>
+    <div class="text-content">
+      <h2>Северная сказка</h2>
+      <p>Позволь мне рассказать тебе эту историю, моя умничка, ХО-ХО-ХО. Она родилась в далёких северных лесах Вологодчины, где зима царит, как царица. Там начинается сказка о малине — той самой, что становится лекарством от всех недугов.</p>
+      <p>Всё началось весной, когда земля просыпалась. В маленькой деревушке жила бабушка Варвара, хранительница секретов. Я шепнул ей: "Посади малину для одной прекрасной девушки. Забей кустик для Ирины, Варвара. А потом и мы с тобой забъём после дела. ХО-ХО-ХО!". (Да, это спланированно всё было, потому что я вижу наперёд)</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="bush.jpg" alt="Кусты" style="object-position: center 80%;"></div>
+    <div class="text-content">
+      <h2>Рост магии</h2>
+      <p>Кусты малины — дети ветра и солнца. Варвара посадила саженцы на солнечном склоне. Они послушались, зазеленели листочками. Уход был ритуалом: полив ключевой водой, песни о здоровье, защита от морозов.</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="berries.jpg" alt="Саженцы"></div>
+    <div class="text-content">
+      <h2>Созревание чуда</h2>
+      <p>Лето принесло цветы, потом ягоды зрели — от зелёных до рубиновых. Варвара отгоняла птиц, шептала сказки кустам. Сбор был праздником — только лучшие ягоды в корзины.</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="berries2.jpg" alt="Зрелые ягоды"></div>
+    <div class="text-content">
+      <h2>Рубиновые сокровища</h2>
+      <p>Вот они — спелые, налитые солнцем ягоды малины. Каждая как маленький рубин, полный сладкой силы и северного волшебства. Они впитали в себя всё тепло лета, чтобы теперь дарить здоровье и радость.</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="berries3.jpg" alt="Сбор ягод"></div>
+    <div class="text-content">
+      <h2>Праздник сбора</h2>
+      <p>Бабушка Варвара с любовью собирает урожай. Только самые лучшие, самые спелые ягоды попадают в её корзину. Это момент настоящей магии — когда природа отдаёт свои дары тем, кто о ней заботился.</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container"><img src="jam.gif" alt="Варенье" style="object-position: center 65%;"></div>
+    <div class="text-content">
+      <h2>Волшебное варенье</h2>
+      <p>Приготовление — магия. Варвара варила медленно, с песнями, разлила по банкам — рубиновое, полное силы. Ля, скажу чисто от себя свои 5 копеек не по сценарию. Варвара вообще баба хоть куда! Ну ты понимаешь, я не молодой уже, а она прям знает, как дедушку ублажить!</p>
+      <p>Это варенье — подарок от меня и Лёши — ждёт тебя, чтоб принести тепло и помочь поправиться быстрее.</p>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="image-container" id="magic-key-container">
+      <img src="magic_key.jpg" alt="Ключ" id="magic-key-img">
+    </div>
+    <div class="text-content">
+      <h2>Волшебный ключ</h2>
+      <h3>Чтобы забрать сокровище — нажми на этот загадочный узор и отсканируй его. В нём спрятана магия. Поднеси телефон — и чудо случится.</h3>
+      <p style="font-size: 1.5rem; color: #87ceeb;">Пусть Новый год принесёт радость и здоровье! ✨<br>Дед Мороз (и Лёша) больше, конечно я - Дед Мороз. Ты как бы такая хорошенькая девица. ХО-ХО-ХО! А Лёшу в скобки, чтобы не мешал;] Напиши мне, если станет скучно, будешь моей снегурочкой. Чмоки!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal" id="modal">
+  <div class="modal-close" id="modal-close">✕</div>
+  <div class="modal-snow-container" id="modal-snow-container"></div>
+  <img src="magic_key.jpg" alt="Волшебный ключ крупно">
+</div>
+
+<script>
+const loadingScreen = document.getElementById('loading-screen');
+const images = document.querySelectorAll('img');
+let loadedCount = 0;
+const totalImages = images.length;
+
+function checkAllLoaded() {
+  loadedCount++;
+  if (loadedCount >= totalImages) {
+    setTimeout(() => {
+      loadingScreen.classList.add('hidden');
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 1000);
+    }, 500);
+  }
+}
+
+if (totalImages === 0) {
+  loadingScreen.classList.add('hidden');
+  setTimeout(() => loadingScreen.style.display = 'none', 1000);
+} else {
+  images.forEach(img => {
+    if (img.complete) {
+      checkAllLoaded();
+    } else {
+      img.addEventListener('load', checkAllLoaded);
+      img.addEventListener('error', checkAllLoaded); // на случай ошибки тоже продолжаем
+    }
+  });
+}
+
+// Остальной код (звёзды, снег и т.д.) запускается сразу, но визуально всё скрыто под загрузкой
+(function() {
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 1;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      animation-delay:${Math.random()*3}s;
+      animation-duration:${2 + Math.random()*2}s;
+    `;
+    document.body.appendChild(s);
+  }
+})();
+const snowSymbols = ['❄', '❅', '❆', '✦', '✧', '·'];
+function createSnow() {
+  const s = document.createElement('div');
+  s.className = 'snowflake';
+  s.textContent = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
+  const dur = 8 + Math.random() * 8;
+  s.style.cssText = `
+    left:${Math.random()*100}vw;
+    top:-20px;
+    animation-duration:${dur}s;
+    opacity:${0.5 + Math.random()*0.5};
+    font-size:${12 + Math.random()*14}px;
+  `;
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), dur * 1000);
+}
+setInterval(createSnow, 350);
+
+const pages = document.querySelectorAll('.page');
+const dots = document.getElementById('dots');
+const progress = document.getElementById('progress');
+const introScreen = document.getElementById('intro-screen');
+const introSnowflake = document.getElementById('intro-snowflake');
+let current = 0;
+
+pages.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dots.appendChild(d);
+});
+
+function updateIndicators() {
+  progress.style.width = ((current + 1) / pages.length * 100) + '%';
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+}
+
+function goTo(index) {
+  if (index < 0 || index >= pages.length || index === current) return;
+
+  const oldPage = pages[current];
+  const newPage = pages[index];
+
+  pages.forEach(p => {
+    p.classList.remove('active', 'prev');
+    p.style.transform = '';
+  });
+
+  const direction = index > current ? 1 : -1;
+
+  if (direction > 0) {
+    oldPage.classList.add('prev');
+  } else {
+    oldPage.style.transform = 'translateX(100%)';
+  }
+
+  if (direction > 0) {
+    newPage.style.transform = 'translateX(100%)';
+  } else {
+    newPage.style.transform = 'translateX(-100%)';
+  }
+
+  requestAnimationFrame(() => {
+    newPage.classList.add('active');
+    newPage.style.transform = 'translateX(0)';
+  });
+
+  current = index;
+  updateIndicators();
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+let startX = 0;
+document.addEventListener('touchstart', e => startX = e.touches[0].clientX, { passive: true });
+document.addEventListener('touchend', e => {
+  const diff = startX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? next() : prev();
+  }
+});
+
+let mouseDown = false, mouseX = 0;
+document.addEventListener('mousedown', e => { mouseDown = true; mouseX = e.clientX; });
+document.addEventListener('mouseup', e => {
+  if (!mouseDown) return;
+  mouseDown = false;
+  const diff = mouseX - e.clientX;
+  if (Math.abs(diff) > 80) {
+    diff > 0 ? next() : prev();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  if (e.key === 'ArrowLeft') prev();
+});
+
+updateIndicators();
+
+// Звуки
+const backgroundMusic = document.getElementById('background-music');
+const magicSound = document.getElementById('magic-sound');
+const pageTurnSound = document.getElementById('page-turn-sound');
+
+backgroundMusic.volume = 0.3;
+
+function startMagic(e) {
+  // Приближение снежинки
+  introSnowflake.style.transition = 'all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+  introSnowflake.style.transform = 'scale(3) rotate(180deg)';
+  introSnowflake.style.textShadow = '0 0 80px #87ceeb, 0 0 120px #ffffff';
+
+  // Фейерверк частиц
+  const rect = introSnowflake.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  const symbols = ['✨', '★', '❄', '✦', '❅', '❆', '✧'];
+  const colors = ['#87ceeb', '#dda0dd', '#ffd700', '#ffffff'];
+
+  for (let i = 0; i < 50; i++) {
+    const p = document.createElement('div');
+    p.className = 'firework-particle';
+    p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    p.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 100 + Math.random() * 200;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+
+    p.style.setProperty('--dx', dx + 'px');
+    p.style.setProperty('--dy', dy + 'px');
+    p.style.left = centerX + 'px';
+    p.style.top = centerY + 'px';
+
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1400);
+  }
+
+  // Полёт снежинки с бочкой и уносом ветром
+  setTimeout(() => {
+    introSnowflake.style.transition = 'all 2s ease-in-out';
+    introSnowflake.style.transform = 'translate(60vw, -100vh) rotate(1440deg) scale(0.3)';
+    introSnowflake.style.opacity = '0';
+  }, 600);
+
+  // Звук магии и разблокировка аудио
+  magicSound.currentTime = 0;
+  magicSound.volume = 0.8;
+  magicSound.play().catch(() => {});
+
+  backgroundMusic.play().catch(() => {});
+  pageTurnSound.play().then(() => pageTurnSound.pause()).catch(() => {});
+
+  // Исчезновение стартового экрана
+  introScreen.classList.add('hidden');
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+  }, 2600);
+}
+
+// Запуск по клику/тапу
+introScreen.addEventListener('click', startMagic, { once: true });
+introScreen.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  startMagic(e);
+}, { once: true });
+
+function playPageTurn() {
+  pageTurnSound.currentTime = 0;
+  pageTurnSound.play().catch(() => {});
+}
+
+function playMagicSound() {
+  magicSound.currentTime = 0;
+  magicSound.volume = 0.7;
+  magicSound.play().catch(() => {});
+}
+
+const originalNext = next;
+const originalPrev = prev;
+const originalGoTo = goTo;
+
+next = function() {
+  playPageTurn();
+  originalNext();
+};
+prev = function() {
+  playPageTurn();
+  originalPrev();
+};
+goTo = function(index) {
+  if (index !== current) playPageTurn();
+  originalGoTo(index);
+};
+
+// Модалка и снег на ней
+const magicKeyContainer = document.getElementById('magic-key-container');
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const modalSnowContainer = document.getElementById('modal-snow-container');
+const modalSnowSymbols = ['❄', '❅', '❆', '✦', '✧', '·'];
+
+function createModalSnow() {
+  const s = document.createElement('div');
+  s.className = 'modal-snowflake';
+  s.textContent = modalSnowSymbols[Math.floor(Math.random() * modalSnowSymbols.length)];
+  const dur = 6 + Math.random() * 6;
+  s.style.cssText = `
+    left:${Math.random()*100}vw;
+    top:-30px;
+    animation-duration:${dur}s;
+    opacity:${0.6 + Math.random()*0.4};
+    font-size:${14 + Math.random()*16}px;
+  `;
+  modalSnowContainer.appendChild(s);
+  setTimeout(() => s.remove(), dur * 1000);
+}
+
+function createModalStars() {
+  for (let i = 0; i < 15; i++) {
+    const star = document.createElement('div');
+    star.className = 'modal-star';
+    const size = Math.random() * 2 + 1;
+    star.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      animation-delay:${Math.random()*3}s;
+    `;
+    modalSnowContainer.appendChild(star);
+  }
+}
+
+magicKeyContainer.addEventListener('click', () => {
+  modal.classList.add('active');
+  playMagicSound();
+
+  modalSnowContainer.innerHTML = '';
+  createModalStars();
+  const snowInterval = setInterval(createModalSnow, 400);
+  modal.snowInterval = snowInterval;
+});
+
+function closeModal() {
+  modal.classList.remove('active');
+  if (modal.snowInterval) {
+    clearInterval(modal.snowInterval);
+    modal.snowInterval = null;
+  }
+  modalSnowContainer.innerHTML = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeModal();
+});
+</script>
+</body>
+</html>
