@@ -8,7 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Sacramento&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #1a0a2e 100%);
+  background: #0a0a1a;
   color: #e0e0e0;
   font-family: 'Cormorant Garamond', serif;
   overflow: hidden;
@@ -16,87 +16,61 @@ body {
   width: 100vw;
   position: relative;
 }
-/* ===== МАКСИМАЛЬНО НАКАЧАННОЕ СИЯНИЕ ===== */
+/* Оптимизированное сияние — 3 лёгких слоя */
 .aurora {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   pointer-events: none;
   z-index: 0;
-  overflow: hidden;
+  will-change: transform;
 }
 .aurora::before, .aurora::after, .aurora > div {
   content: '';
   position: absolute;
-  width: 280%; height: 280%;
-  left: -90%; top: -90%;
+  width: 200%; height: 200%;
+  left: -50%; top: -50%;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.55;
+  filter: blur(60px);
+  opacity: 0.4;
   mix-blend-mode: screen;
-  animation: auroraWave 32s linear infinite;
+  animation: auroraWave 40s linear infinite;
 }
 .aurora::before {
-  background: radial-gradient(ellipse 90% 50% at 50% 20%, rgba(0, 255, 150, 0.7), transparent 65%);
-  animation-delay: 0s;
+  background: radial-gradient(ellipse 80% 50% at 50% 20%, rgba(0, 255, 150, 0.6), transparent 70%);
 }
 .aurora::after {
-  background: radial-gradient(ellipse 100% 60% at 30% 30%, rgba(100, 255, 200, 0.65), transparent 70%);
-  animation-delay: -10s;
+  background: radial-gradient(ellipse 90% 60% at 30% 40%, rgba(100, 255, 200, 0.55), transparent 70%);
+  animation-delay: -12s;
 }
-.aurora > div:nth-child(1) {
-  background: radial-gradient(ellipse 80% 70% at 70% 40%, rgba(150, 50, 255, 0.6), transparent 65%);
-  animation-delay: -6s;
-}
-.aurora > div:nth-child(2) {
-  background: radial-gradient(ellipse 90% 50% at 50% 10%, rgba(0, 200, 255, 0.55), transparent 70%);
-  animation-delay: -16s;
-}
-.aurora > div:nth-child(3) {
-  background: radial-gradient(ellipse 70% 80% at 20% 50%, rgba(200, 100, 255, 0.6), transparent 65%);
-  animation-delay: -22s;
-}
-.aurora > div:nth-child(4) {
-  background: radial-gradient(ellipse 100% 70% at 60% 15%, rgba(50, 255, 180, 0.6), transparent 70%);
-  animation-delay: -4s;
-}
-.aurora > div:nth-child(5) {
-  background: radial-gradient(ellipse 85% 60% at 40% 45%, rgba(180, 100, 255, 0.55), transparent 65%);
-  animation-delay: -14s;
-}
-.aurora > div:nth-child(6) {
-  background: radial-gradient(ellipse 95% 55% at 55% 5%, rgba(0, 255, 220, 0.5), transparent 70%);
-  animation-delay: -28s;
+.aurora > div {
+  background: radial-gradient(ellipse 80% 70% at 70% 30%, rgba(150, 100, 255, 0.5), transparent 70%);
+  animation-delay: -20s;
 }
 @keyframes auroraWave {
   0% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(25%, 40%) rotate(18deg); }
+  50% { transform: translate(15%, 25%) rotate(12deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
-}
-.aurora {
-  animation: auroraPulse 15s ease-in-out infinite;
-}
-@keyframes auroraPulse {
-  0%, 100% { opacity: 0.85; }
-  50% { opacity: 1; }
 }
 .star {
   position: fixed;
   background: #fff;
   border-radius: 50%;
-  animation: twinkle 3s ease-in-out infinite;
+  animation: twinkle 4s ease-in-out infinite;
+  will-change: opacity;
 }
 @keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
 }
 .snowflake {
   position: fixed;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.8);
   pointer-events: none;
   z-index: 1000;
-  text-shadow: 0 0 8px rgba(135, 206, 235, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 6px rgba(135, 206, 235, 0.6);
   animation: snowfall linear forwards;
+  will-change: transform;
 }
 @keyframes snowfall {
   to { transform: translateY(110vh) rotate(360deg); }
@@ -113,7 +87,7 @@ body {
   padding: 5vw;
   padding-bottom: 12vh;
   box-sizing: border-box;
-  background: linear-gradient(170deg, rgba(15, 25, 45, 0.2) 0%, rgba(10, 15, 30, 0.2) 100%);
+  background: linear-gradient(170deg, rgba(15, 25, 45, 0.15) 0%, rgba(10, 15, 30, 0.15) 100%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -151,8 +125,8 @@ body {
   overflow: hidden;
   margin-bottom: 5vw;
   position: relative;
-  border: 2px solid rgba(135, 206, 235, 0.4);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(135, 206, 235, 0.2);
+  border: 2px solid rgba(135, 206, 235, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
@@ -179,7 +153,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 4s linear infinite;
+  animation: shimmer 5s linear infinite;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
@@ -293,18 +267,6 @@ body {
   z-index: 100;
   transition: width 0.4s ease;
 }
-.corner {
-  position: fixed;
-  width: 80px; height: 80px;
-  pointer-events: none;
-  z-index: 5;
-  opacity: 0.5;
-}
-.corner.tl { top: 0; left: 0; background: radial-gradient(circle at 0 0, rgba(135, 206, 235, 0.3), transparent 70%); }
-.corner.tr { top: 0; right: 0; background: radial-gradient(circle at 100% 0, rgba(200, 150, 255, 0.3), transparent 70%); }
-.corner.bl { bottom: 0; left: 0; background: radial-gradient(circle at 0 100%, rgba(255, 200, 150, 0.2), transparent 70%); }
-.corner.br { bottom: 0; right: 0; background: radial-gradient(circle at 100% 100%, rgba(135, 206, 235, 0.3), transparent 70%); }
-/* Модалка */
 .modal {
   display: none;
   position: fixed;
@@ -345,7 +307,6 @@ body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
-/* Снег и звёзды на модалке */
 .modal .modal-snowflake {
   position: absolute;
   color: rgba(255, 255, 255, 0.9);
@@ -365,7 +326,6 @@ body {
 @keyframes snowfall-modal {
   to { transform: translateY(110vh) rotate(360deg); }
 }
-/* Экран загрузки */
 #loading-screen {
   position: fixed;
   top: 0; left: 0;
@@ -399,7 +359,6 @@ body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
 }
-/* Стартовый экран с снежинкой */
 #intro-screen {
   position: absolute;
   width: 100%; height: 100%;
@@ -437,7 +396,6 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-/* Фейерверк частицы */
 .firework-particle {
   position: absolute;
   pointer-events: none;
@@ -458,7 +416,6 @@ body {
 @media (max-width: 500px) {
   .image-container { height: 30vh; }
 }
-/* Увеличенный контейнер для варенья */
 .page:nth-of-type(9) .image-container {
   height: 50vh;
   min-height: 280px;
@@ -467,13 +424,11 @@ body {
 </style>
 </head>
 <body>
-<!-- Экран загрузки -->
 <div id="loading-screen">
   <div id="loading-snow">❄</div>
   <div id="loading-text">Дед Мороз готовит магию...</div>
 </div>
 
-<!-- Звуки -->
 <audio id="background-music" loop preload="auto">
   <source src="christmas-background.mp3" type="audio/mpeg">
 </audio>
@@ -484,19 +439,13 @@ body {
   <source src="page-turn.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Сияние -->
 <div class="aurora">
-  <div></div><div></div><div></div><div></div><div></div><div></div>
+  <div></div>
 </div>
 
-<div class="corner tl"></div>
-<div class="corner tr"></div>
-<div class="corner bl"></div>
-<div class="corner br"></div>
 <div class="progress" id="progress"></div>
 <div class="page-indicator" id="dots"></div>
 
-<!-- Стартовый экран -->
 <div id="intro-screen">
   <div id="intro-snowflake">❄</div>
   <div id="intro-text">Нажми на снежинку,<br>чтобы получилась магия!</div>
@@ -594,7 +543,6 @@ body {
   </div>
 </div>
 
-<!-- Модальное окно -->
 <div class="modal" id="modal">
   <div class="modal-close" id="modal-close">✕</div>
   <div class="modal-snow-container" id="modal-snow-container"></div>
@@ -628,43 +576,43 @@ if (totalImages === 0) {
       checkAllLoaded();
     } else {
       img.addEventListener('load', checkAllLoaded);
-      img.addEventListener('error', checkAllLoaded); // на случай ошибки тоже продолжаем
+      img.addEventListener('error', checkAllLoaded);
     }
   });
 }
 
-// Остальной код (звёзды, снег и т.д.) запускается сразу, но визуально всё скрыто под загрузкой
 (function() {
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 15; i++) {
     const s = document.createElement('div');
     s.className = 'star';
-    const size = Math.random() * 2 + 1;
+    const size = Math.random() * 1.5 + 0.8;
     s.style.cssText = `
       width:${size}px;height:${size}px;
       left:${Math.random()*100}%;top:${Math.random()*100}%;
-      animation-delay:${Math.random()*3}s;
-      animation-duration:${2 + Math.random()*2}s;
+      animation-delay:${Math.random()*4}s;
+      animation-duration:${3 + Math.random()*2}s;
     `;
     document.body.appendChild(s);
   }
 })();
-const snowSymbols = ['❄', '❅', '❆', '✦', '✧', '·'];
+
 function createSnow() {
   const s = document.createElement('div');
   s.className = 'snowflake';
+  const snowSymbols = ['❄', '❅', '❆'];
   s.textContent = snowSymbols[Math.floor(Math.random() * snowSymbols.length)];
-  const dur = 8 + Math.random() * 8;
+  const dur = 10 + Math.random() * 10;
   s.style.cssText = `
     left:${Math.random()*100}vw;
     top:-20px;
     animation-duration:${dur}s;
-    opacity:${0.5 + Math.random()*0.5};
-    font-size:${12 + Math.random()*14}px;
+    opacity:${0.6 + Math.random()*0.4};
+    font-size:${14 + Math.random()*10}px;
   `;
   document.body.appendChild(s);
   setTimeout(() => s.remove(), dur * 1000);
 }
-setInterval(createSnow, 350);
+setInterval(createSnow, 600);
 
 const pages = document.querySelectorAll('.page');
 const dots = document.getElementById('dots');
@@ -749,7 +697,6 @@ document.addEventListener('keydown', e => {
 
 updateIndicators();
 
-// Звуки
 const backgroundMusic = document.getElementById('background-music');
 const magicSound = document.getElementById('magic-sound');
 const pageTurnSound = document.getElementById('page-turn-sound');
@@ -757,12 +704,10 @@ const pageTurnSound = document.getElementById('page-turn-sound');
 backgroundMusic.volume = 0.3;
 
 function startMagic(e) {
-  // Приближение снежинки
   introSnowflake.style.transition = 'all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
   introSnowflake.style.transform = 'scale(3) rotate(180deg)';
   introSnowflake.style.textShadow = '0 0 80px #87ceeb, 0 0 120px #ffffff';
 
-  // Фейерверк частиц
   const rect = introSnowflake.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
@@ -790,14 +735,12 @@ function startMagic(e) {
     setTimeout(() => p.remove(), 1400);
   }
 
-  // Полёт снежинки с бочкой и уносом ветром
   setTimeout(() => {
     introSnowflake.style.transition = 'all 2s ease-in-out';
     introSnowflake.style.transform = 'translate(60vw, -100vh) rotate(1440deg) scale(0.3)';
     introSnowflake.style.opacity = '0';
   }, 600);
 
-  // Звук магии и разблокировка аудио
   magicSound.currentTime = 0;
   magicSound.volume = 0.8;
   magicSound.play().catch(() => {});
@@ -805,14 +748,12 @@ function startMagic(e) {
   backgroundMusic.play().catch(() => {});
   pageTurnSound.play().then(() => pageTurnSound.pause()).catch(() => {});
 
-  // Исчезновение стартового экрана
   introScreen.classList.add('hidden');
   setTimeout(() => {
     introScreen.style.display = 'none';
   }, 2600);
 }
 
-// Запуск по клику/тапу
 introScreen.addEventListener('click', startMagic, { once: true });
 introScreen.addEventListener('touchend', (e) => {
   e.preventDefault();
@@ -847,7 +788,6 @@ goTo = function(index) {
   originalGoTo(index);
 };
 
-// Модалка и снег на ней
 const magicKeyContainer = document.getElementById('magic-key-container');
 const modal = document.getElementById('modal');
 const modalClose = document.getElementById('modal-close');
